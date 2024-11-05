@@ -1,1 +1,0 @@
-# thegarlicnews.github.io
