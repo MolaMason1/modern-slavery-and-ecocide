@@ -215,7 +215,7 @@
             <!-- More games can be added here -->
         </section>
 
-        <section id="quiz">
+      <section id="quiz">
             <h2>Garlic Trivia Quiz</h2>
             <p>How well do you know garlic? Answer the questions below:</p>
             
@@ -237,38 +237,81 @@
                     <label><input type="radio" name="answer2" value="Allicin"> Allicin</label><br>
                     <label><input type="radio" name="answer2" value="Capsaicin"> Capsaicin</label><br>
                     <label><input type="radio" name="answer2" value="Quercetin"> Quercetin</label><br>
-                    <label><input type="radio" name="answer2" value="Curcumin"> Curcumin</label><br>
+                    <label><input type="radio" name="answer2" value="Cinnamon"> Cinnamon</label><br>
                 </form>
             </div>
 
-            <button onclick="submitQuiz()">Submit Answers</button>
-            <div id="quiz-result"></div>
+            <!-- Question 3 -->
+            <div class="quiz-question">
+                <p>3. Which part of the garlic plant is typically used in cooking?</p>
+                <form id="quiz-form-3">
+                    <label><input type="radio" name="answer3" value="Bulb"> Bulb</label><br>
+                    <label><input type="radio" name="answer3" value="Leaf"> Leaf</label><br>
+                    <label><input type="radio" name="answer3" value="Flower"> Flower</label><br>
+                    <label><input type="radio" name="answer3" value="Root"> Root</label><br>
+                </form>
+            </div>
+
+            <button type="button" onclick="checkAnswers()">Submit Answers</button>
+            <p id="quiz-result"></p>
         </section>
     </main>
 
-    <div class="popup-ad" id="popup-ad">
-        <p>ADVERTISEMENT: Check out the latest Garlic products!</p>
-        <a href="#">Click Here</a>
+    <!-- Pop-up Ad -->
+    <div id="popup-ad" class="popup-ad">
+        <a href="popup-redirect.html" id="popup-link" target="_blank">Click me for a surprise!</a>
     </div>
 
     <script>
-        function submitQuiz() {
-            let correctAnswers = 0;
+        // Show the popup ad after 5 seconds
+        setTimeout(() => {
+            document.getElementById('popup-ad').style.display = 'block';
+        }, 5000);
 
-            // Answer 1
+        // Close the popup ad if the link is clicked
+        document.getElementById('popup-link').addEventListener('click', () => {
+            document.getElementById('popup-ad').style.display = 'none';
+        });
+
+        function checkAnswers() {
+            const answers = {
+                answer1: "China",
+                answer2: "Allicin",
+                answer3: "Bulb"
+            };
+
+            let result = "Results:\n";
+            let score = 0;
+
+            // Check answer for Question 1
             const answer1 = document.querySelector('input[name="answer1"]:checked');
-            if (answer1 && answer1.value === "China") {
-                correctAnswers++;
+            if (answer1 && answer1.value === answers.answer1) {
+                score++;
+                result += "1. Correct!\n";
+            } else {
+                result += "1. Incorrect. The correct answer is " + answers.answer1 + ".\n";
             }
 
-            // Answer 2
+            // Check answer for Question 2
             const answer2 = document.querySelector('input[name="answer2"]:checked');
-            if (answer2 && answer2.value === "Allicin") {
-                correctAnswers++;
+            if (answer2 && answer2.value === answers.answer2) {
+                score++;
+                result += "2. Correct!\n";
+            } else {
+                result += "2. Incorrect. The correct answer is " + answers.answer2 + ".\n";
             }
 
-            const resultText = `You got ${correctAnswers} out of 2 correct!`;
-            document.getElementById("quiz-result").innerText = resultText;
+            // Check answer for Question 3
+            const answer3 = document.querySelector('input[name="answer3"]:checked');
+            if (answer3 && answer3.value === answers.answer3) {
+                score++;
+                result += "3. Correct!\n";
+            } else {
+                result += "3. Incorrect. The correct answer is " + answers.answer3 + ".\n";
+            }
+
+            result += "Your score: " + score + " out of 3.";
+            document.getElementById("quiz-result").textContent = result;
         }
     </script>
 </body>
