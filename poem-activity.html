@@ -6,60 +6,118 @@
   <title>Poem Activity</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+    body {
+      font-family: 'Georgia', serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f1e7;
+      color: #2f2f2f;
+    }
+
+    header {
+      background-color: #395144;
+      color: white;
+      padding: 40px 20px 30px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    header p a {
+      color: #a7e9af;
+      text-decoration: underline;
+    }
+
     .carousel {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 30px;
+      margin: 40px auto;
+      max-width: 700px;
     }
+
     .carousel img {
-      width: 80%;
-      max-width: 600px;
-      height: auto;
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
+
     .carousel-controls {
-      margin-top: 10px;
+      margin-top: 15px;
     }
+
     .carousel-controls button {
       padding: 10px 20px;
       margin: 0 10px;
-      background-color: #007f5f;
+      background-color: #607844;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
     }
+
     .carousel-controls button:hover {
-      background-color: #005f45;
+      background-color: #4a5f33;
     }
+
     .section {
       max-width: 800px;
       margin: 0 auto 50px auto;
-      padding: 0 20px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
+
+    h2, h3 {
+      color: #2c432c;
+    }
+
     iframe {
       width: 100%;
       border: none;
+      margin-top: 20px;
     }
-    h2, h3 {
-      color: #1c3d3d;
+
+    #poem-submissions {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #f9f7f1;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    #poem-submissions p {
+      white-space: pre-line;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      padding: 10px;
+      background-color: #ffffff;
+      border-left: 4px solid #6b8e23;
+      padding-left: 15px;
     }
   </style>
 </head>
 <body>
-  <header class="section">
+
+  <header>
     <h1>Poem Activity</h1>
     <p>Inspired by the creative work from 
       <a href="https://wavewritingandvisualexpression.wordpress.com/slavery-in-the-21st-century-a-wave-exhibit-of-writing-art-and-activism/college-writing-workshop-research-and-creative-writings-that-work-to-end-slavery/slavery-in-the-21st-century-poems/" target="_blank">
-        this site
+        this project
       </a>.
     </p>
   </header>
 
   <div class="carousel">
-    <img id="carousel-image" src="photos/artisanal-mine-pic.jpg" alt="Poem Inspiration" />
+    <img id="carousel-image" src="photos/artisanal-mine-pic.jpg" alt="Poem Inspiration Image" />
     <div class="carousel-controls">
       <button onclick="prevImage()">← Previous</button>
       <button onclick="nextImage()">Next →</button>
@@ -67,21 +125,22 @@
   </div>
 
   <section class="section">
-    <h2>Write a Poem</h2>
-    <p>Choose one of the photos above as your inspiration and submit a poem based on it.</p>
+    <h2>Write Your Poem</h2>
+    <p>Choose one of the images above as inspiration. When you're ready, write a poem and submit it using the form below. You can remain anonymous if you wish.</p>
 
     <!-- Embedded Google Form -->
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc9svJgsMsQR__CbRjQJ9KaSdoRayw3wA__c0MnngFp9JqSqg/viewform?embedded=true" height="687">Loading…</iframe>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc9svJgsMsQR__CbRjQJ9KaSdoRayw3wA__c0MnngFp9JqSqg/viewform?embedded=true" height="750">
+      Loading…
+    </iframe>
   </section>
 
   <section class="section">
     <h3>Submitted Poems</h3>
-    <!-- You can manually paste submitted poems below -->
     <div id="poem-submissions">
-      <!-- Example placeholder (you can remove or replace) -->
-      <!--
-      <p><strong>Title of Poem</strong> by Author Name<br>
-      Poem content goes here.<br><br></p>
+      <!-- Paste submitted poems below like this:
+      <p><strong>"Title of Poem"</strong> by Author Name<br>
+      Your poem text goes here.
+      </p>
       -->
     </div>
   </section>
