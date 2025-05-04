@@ -4,156 +4,113 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Poem Activity</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f3f4f6;
-      color: #1f2937;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    h1, h2 {
-      text-align: center;
-    }
-
-    .carousel-container {
-      text-align: center;
-      margin: 30px 0;
-    }
-
-    .carousel-container img {
-      width: 100%;
-      max-height: 400px;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    .carousel-buttons {
-      margin-top: 10px;
-    }
-
-    button {
-      background-color: #2563eb;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      margin: 0 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    button:hover {
-      background-color: #1e40af;
-    }
-
-    form {
-      margin-top: 30px;
+    .carousel {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      align-items: center;
+      margin-bottom: 30px;
     }
-
-    input[type="text"], textarea {
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
+    .carousel img {
+      width: 80%;
+      max-width: 600px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
-
-    textarea {
-      resize: vertical;
-      min-height: 150px;
-    }
-
-    .submitted-poems {
-      margin-top: 40px;
-    }
-
-    .poem {
-      background: #e5e7eb;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-    }
-
-    .credit {
-      font-size: 0.9rem;
-      text-align: center;
+    .carousel-controls {
       margin-top: 10px;
-      color: #6b7280;
+    }
+    .carousel-controls button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      background-color: #007f5f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .carousel-controls button:hover {
+      background-color: #005f45;
+    }
+    .section {
+      max-width: 800px;
+      margin: 0 auto 50px auto;
+      padding: 0 20px;
+    }
+    iframe {
+      width: 100%;
+      border: none;
+    }
+    h2, h3 {
+      color: #1c3d3d;
     }
   </style>
 </head>
 <body>
-  <h1>Poem Activity</h1>
-  <p class="credit">
-    Inspired by work at 
-    <a href="https://wavewritingandvisualexpression.wordpress.com/slavery-in-the-21st-century-a-wave-exhibit-of-writing-art-and-activism/college-writing-workshop-research-and-creative-writings-that-work-to-end-slavery/slavery-in-the-21st-century-poems/" 
-       target="_blank" rel="noopener noreferrer">this WAVE exhibit</a>.
-  </p>
+  <header class="section">
+    <h1>Poem Activity</h1>
+    <p>Inspired by the creative work from 
+      <a href="https://wavewritingandvisualexpression.wordpress.com/slavery-in-the-21st-century-a-wave-exhibit-of-writing-art-and-activism/college-writing-workshop-research-and-creative-writings-that-work-to-end-slavery/slavery-in-the-21st-century-poems/" target="_blank">
+        this site
+      </a>.
+    </p>
+  </header>
 
-  <div class="carousel-container">
-    <img id="carouselImage" src="photos/copper-mine.jpg" alt="Poem prompt image" />
-    <div class="carousel-buttons">
+  <div class="carousel">
+    <img id="carousel-image" src="photos/copper-mine.jpg" alt="Poem Inspiration" />
+    <div class="carousel-controls">
       <button onclick="prevImage()">← Previous</button>
       <button onclick="nextImage()">Next →</button>
     </div>
   </div>
 
-  <h2>Write a Poem</h2>
-  <p>Choose one of the images above and write a poem inspired by it. You can submit anonymously if you'd like.</p>
+  <section class="section">
+    <h2>Write a Poem</h2>
+    <p>Choose one of the photos above as your inspiration and submit a poem based on it.</p>
 
-  <form action="https://formsubmit.co/youremail@example.com" method="POST">
-    <!-- Replace with your actual email in action above -->
-    <input type="hidden" name="_subject" value="New Poem Submission">
-    <input type="text" name="Poem Title" placeholder="Title of Poem" required />
-    <input type="text" name="Author Name" placeholder="Your name (or Anonymous)" />
-    <textarea name="Poem Text" placeholder="Write your poem here..." required></textarea>
-    <button type="submit">Submit Poem</button>
-  </form>
+    <!-- Embedded Google Form -->
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc9svJgsMsQR__CbRjQJ9KaSdoRayw3wA__c0MnngFp9JqSqg/viewform?embedded=true" height="687">Loading…</iframe>
+  </section>
 
-  <div class="submitted-poems">
-    <h2>Submitted Poems</h2>
-    <!-- Example of a poem card; you can copy and paste more as needed -->
-    <!--
-    <div class="poem">
-      <h3>Title of Poem</h3>
-      <p><em>by Author Name</em></p>
-      <p>Your poem goes here. This is a sample layout for displaying a submitted poem.</p>
+  <section class="section">
+    <h3>Submitted Poems</h3>
+    <!-- You can manually paste submitted poems below -->
+    <div id="poem-submissions">
+      <!-- Example placeholder (you can remove or replace) -->
+      <!--
+      <p><strong>Title of Poem</strong> by Author Name<br>
+      Poem content goes here.<br><br></p>
+      -->
     </div>
-    -->
-  </div>
+  </section>
 
   <script>
     const images = [
-      "photos/copper-mine.jpg",
-      "photos/colbalt-mines.jpg",
-      "photos/ecocide-hill.jpg",
-      "photos/german-mine.jpg",
-      "photos/fish-ecocide.jpg",
-      "photos/cambodia-pic.jpg",
-      "photos/blood-and-earth-pic.jpg"
+      'photos/copper-mine.jpg',
+      'photos/colbalt-mines.jpg',
+      'photos/ecocide-hill.jpg',
+      'photos/german-mine.jpg',
+      'photos/fish-ecocide.jpg',
+      'photos/cambodia-pic.jpg',
+      'photos/blood-and-earth-pic.jpg'
     ];
+    let current = 0;
 
-    let currentImage = 0;
-    const carouselImage = document.getElementById("carouselImage");
-
-    function updateImage() {
-      carouselImage.src = images[currentImage];
-    }
-
-    function prevImage() {
-      currentImage = (currentImage - 1 + images.length) % images.length;
-      updateImage();
+    function showImage(index) {
+      const img = document.getElementById('carousel-image');
+      img.src = images[index];
     }
 
     function nextImage() {
-      currentImage = (currentImage + 1) % images.length;
-      updateImage();
+      current = (current + 1) % images.length;
+      showImage(current);
+    }
+
+    function prevImage() {
+      current = (current - 1 + images.length) % images.length;
+      showImage(current);
     }
   </script>
 </body>
