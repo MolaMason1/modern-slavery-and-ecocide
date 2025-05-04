@@ -157,17 +157,10 @@
     const gridSize = 15;
     const grid = [];
     const directions = [
-      { x: 1, y: 0 },   // right
-      { x: 0, y: 1 },   // down
-      { x: 1, y: 1 },   // down-right
-      { x: -1, y: 0 },  // left
-      { x: 0, y: -1 },  // up
-      { x: -1, y: -1 }, // up-left
-      { x: 1, y: -1 },  // up-right
-      { x: -1, y: 1 }   // down-left
+      { x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: -1, y: 0 },
+      { x: 0, y: -1 }, { x: -1, y: -1 }, { x: 1, y: -1 }, { x: -1, y: 1 }
     ];
 
-    // Initialize empty grid
     for (let i = 0; i < gridSize; i++) {
       grid[i] = [];
       for (let j = 0; j < gridSize; j++) {
@@ -175,7 +168,6 @@
       }
     }
 
-    // Place words in the grid
     function placeWords() {
       for (let word of words) {
         word = word.toUpperCase();
@@ -211,7 +203,6 @@
       }
     }
 
-    // Fill empty spaces with random letters
     function fillGrid() {
       const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       for (let i = 0; i < gridSize; i++) {
@@ -223,7 +214,6 @@
       }
     }
 
-    // Render the grid
     function renderGrid() {
       const gridContainer = document.getElementById('grid');
       gridContainer.innerHTML = '';
@@ -239,7 +229,6 @@
       }
     }
 
-    // Handle user selection
     let isMouseDown = false;
     let selectedCells = [];
 
@@ -285,13 +274,12 @@
     });
 
     document.addEventListener('mouseup', () => {
-      if (isMouseDown) {
-        isMouseDown = false;
+      if (selectedCells.length > 0) {
         checkWord();
       }
+      isMouseDown = false;
     });
 
-    // Initialize the puzzle
     placeWords();
     fillGrid();
     renderGrid();
