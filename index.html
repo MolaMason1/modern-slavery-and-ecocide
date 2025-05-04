@@ -26,6 +26,60 @@
             margin: 20px 0;
         }
 
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .cta-button, .dropdown-btn {
+            display: inline-block;
+            background-color: #38b000;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .cta-button:hover, .dropdown-btn:hover {
+            background-color: #32a800;
+        }
+
+        .dropdown {
+            display: inline-block;
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 220px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            color: #2d6a4f;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #d4f4d3;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
         .content-section {
             padding: 20px;
             margin: 20px auto;
@@ -41,7 +95,7 @@
         }
 
         .song-item, .poem-item {
-            margin: 20px 0;
+            margin: 10px 0;
             font-size: 1.1em;
         }
 
@@ -71,28 +125,6 @@
             font-style: italic;
             color: #2d6a4f;
         }
-
-        .cta-button {
-            display: inline-block;
-            background-color: #38b000;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            margin-top: 20px;
-        }
-
-        .cta-button:hover {
-            background-color: #32a800;
-        }
-
-        .lyrics, .stanza {
-            margin-top: 10px;
-            font-style: italic;
-            white-space: pre-wrap;
-        }
     </style>
 </head>
 <body>
@@ -101,32 +133,35 @@
     <h1>Modern Slavery and Ecocide: Music and Poetry for Reflection</h1>
 </header>
 
+<div class="button-container">
+    <a href="poem-activity.html" class="cta-button">Poem Activity</a>
+    <a href="word-search.html" class="cta-button">Word Search</a>
+    <div class="dropdown">
+        <button class="dropdown-btn">Donate</button>
+        <div class="dropdown-content">
+            <a href="https://www.stopecocide.earth/donate" target="_blank">Stop Ecocide</a>
+            <a href="https://www.antislavery.org/donate/" target="_blank">Anti-Slavery International</a>
+            <a href="https://polarisproject.org/" target="_blank">Polaris Project</a>
+        </div>
+    </div>
+</div>
+
 <div class="content-section">
     <h2>Songs on Modern Slavery and Ecocide</h2>
     <ul class="song-list">
         <li class="song-item">
             <strong>Mercy Mercy Me (The Ecology)</strong> by Marvin Gaye
             <p><em>This song expresses the growing concern about environmental destruction, pollution, and the damage people do to nature. By this reason, it represents a wider fight against ecocide.</em></p>
-            <div class="lyrics">
-                “Where did all the blue skies go?  
-                Poison is the wind that blows  
-                From the north, and south, and east.”  
-                
-                “Oh, things ain't what they used to be  
-                Oil wasted on the ocean and upon our seas  
-                Fish full of mercury, oh, oh, mercy, mercy me.”
-            </div>
+            <p><strong>Lyrics:</strong><br>
+            “Where did all the blue skies go? Poison is the wind that blows From the north, and south, and east.”<br>
+            “Oh, things ain't what they used to be Oil wasted on the ocean and upon our seas Fish full of mercury, oh, oh, mercy, mercy me.”</p>
             <iframe class="youtube-video" src="https://www.youtube.com/embed/ocYRCOUtz00" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </li>
         <li class="song-item">
             <strong>Slave Driver</strong> by Bob Marley
             <p><em>This is a reggae song that exemplifies oppression and exploitation, particularly the exploitation of enslaved peoples.</em></p>
-            <div class="lyrics">
-                "Today they say that we are free.  
-                Only to be chained in poverty.  
-                Good God, I think it’s illiteracy.  
-                It’s only a machine that make money."
-            </div>
+            <p><strong>Lyrics:</strong><br>
+            "Today they say that we are free. Only to be chained in poverty. Good God, I think it’s illiteracy. It’s only a machine that make money."</p>
             <iframe class="youtube-video" src="https://www.youtube.com/embed/f470knkUgEU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </li>
     </ul>
@@ -152,20 +187,19 @@
         <li class="poem-item">
             <strong>The Cry of the Children</strong> by Elizabeth Barrett Browning
             <p><em>This poem pulls from the image of suffering children working tirelessly each and every day. This fear and the reality of child labor still roams all across the world.</em></p>
-            <div class="stanza">
-                "For oh," say the children, "we are weary,  
-                And we cannot run or leap —  
-                If we cared for any meadows, it were merely  
-                To drop down in them and sleep.  
-                Our knees tremble sorely in the stooping —  
-                We fall upon our faces, trying to go ;  
-                And, underneath our heavy eyelids drooping,  
-                The reddest flower would look as pale as snow.  
-                For, all day, we drag our burden tiring,  
-                Through the coal-dark, underground —  
-                Or, all day, we drive the wheels of iron  
-                In the factories, round and round."
-            </div>
+            <p><strong>Excerpt:</strong><br>
+            "For oh," say the children, "we are weary,<br>
+            And we cannot run or leap —<br>
+            If we cared for any meadows, it were merely<br>
+            To drop down in them and sleep.<br>
+            Our knees tremble sorely in the stooping —<br>
+            We fall upon our faces, trying to go ;<br>
+            And, underneath our heavy eyelids drooping,<br>
+            The reddest flower would look as pale as snow.<br>
+            For, all day, we drag our burden tiring,<br>
+            Through the coal-dark, underground —<br>
+            Or, all day, we drive the wheels of iron<br>
+            In the factories, round and round."</p>
         </li>
         <li class="poem-item">
             <strong>The Face of Freedom</strong> (Spoken Word)
@@ -173,10 +207,6 @@
             <iframe class="youtube-video" src="https://www.youtube.com/embed/Xkg3wRjlZB8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </li>
     </ul>
-</div>
-
-<div class="content-section">
-    <a href="https://example.com/get-involved" class="cta-button" target="_blank">Get Involved in the Fight Against Modern Slavery and Ecocide</a>
 </div>
 
 </body>
