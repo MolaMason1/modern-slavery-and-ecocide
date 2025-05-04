@@ -3,176 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Word Search – Modern Slavery & Ecocide</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Word Search Puzzle</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #e9f7e6;
-      color: #2d6a4f;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background-color: #2d6a4f;
-      color: white;
       text-align: center;
-      padding: 20px;
     }
-
-    h1 {
-      margin: 0;
+    #loading {
+      font-size: 1.5em;
+      margin-top: 2em;
     }
-
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 20px;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    #puzzle-container {
+      display: none;
+      margin: 20px auto;
     }
-
-    .word-list {
-      margin-top: 20px;
-      font-size: 1.1em;
+    table {
+      border-collapse: collapse;
+      margin: 0 auto;
     }
-
-    .word-list ul {
-      list-style: none;
-      padding-left: 0;
-      columns: 2;
-    }
-
-    .word-list li {
-      margin: 5px 0;
-      cursor: pointer;
-    }
-
-    .word-list li.found {
-      text-decoration: line-through;
-      color: gray;
-    }
-
-    .word-search-grid {
-      margin-top: 30px;
-      display: grid;
-      grid-template-columns: repeat(15, 30px);
-      grid-gap: 5px;
-      justify-content: center;
-    }
-
-    .cell {
+    td {
+      border: 1px solid #000;
       width: 30px;
       height: 30px;
       text-align: center;
-      font-size: 1em;
-      text-transform: uppercase;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      line-height: 30px;
-      user-select: none;
-      cursor: pointer;
+      vertical-align: middle;
+      font-size: 20px;
+      cursor: default;
     }
-
-    .cell.selected {
-      background-color: #a3d9a5;
-    }
-
-    .cell.found {
-      background-color: #38b000;
-      color: white;
-    }
-
-    .instructions {
+    #word-list {
       margin-top: 20px;
-      font-size: 1em;
-    }
-
-    .back-link {
-      display: inline-block;
-      margin-top: 30px;
-      text-decoration: none;
-      color: #2d6a4f;
-      font-weight: bold;
-    }
-
-    .back-link:hover {
-      text-decoration: underline;
+      list-style-type: none;
+      padding: 0;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Word Search</h1>
-  </header>
-
-  <div class="container">
-    <p class="instructions">
-      Find the words hidden in the grid below. Click and drag to select letters. Words may appear horizontally, vertically, or diagonally.
-    </p>
-
-    <div class="word-list">
-      <h3>Word List</h3>
-      <ul id="wordList">
-        <li>Ecocide</li>
-        <li>Slavery</li>
-        <li>Extraction</li>
-        <li>Export</li>
-        <li>Manufacture</li>
-        <li>Retail</li>
-        <li>Consumer</li>
-        <li>Kevin Bales</li>
-        <li>Environment</li>
-        <li>Deforestation</li>
-        <li>Pollution</li>
-        <li>Trafficking</li>
-        <li>Bondage</li>
-        <li>Corruption</li>
-        <li>Supply Chain</li>
-        <li>Forced Labor</li>
-        <li>Mining</li>
-        <li>Logging</li>
-        <li>Debt</li>
-        <li>Freedom</li>
-      </ul>
-    </div>
-
-    <div class="word-search-grid" id="grid">
-      <!-- Grid will be generated here -->
-    </div>
-
-    <a href="index.html" class="back-link">← Back to Home</a>
+  <h1>Word Search Puzzle</h1>
+  <div id="loading">Generating puzzle, please wait...</div>
+  <div id="puzzle-container">
+    <table id="puzzle"></table>
+    <h3>Words to Find:</h3>
+    <ul id="word-list"></ul>
   </div>
 
   <script>
-    const words = [
-      "ecocide", "slavery", "extraction", "export", "manufacture", "retail",
-      "consumer", "kevinbales", "environment", "deforestation", "pollution",
-      "trafficking", "bondage", "corruption", "supplychain", "forcedlabor",
-      "mining", "logging", "debt", "freedom"
-    ];
-
+    const words = ["QUANTUM", "PROTON", "ENERGY", "BEAM", "TARGET", "MAGNET", "VACUUM", "ACCELERATOR", "CERN", "PARTICLE"];
     const gridSize = 15;
-    const grid = [];
+    const grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(''));
     const directions = [
-      { x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: -1, y: 0 },
-      { x: 0, y: -1 }, { x: -1, y: -1 }, { x: 1, y: -1 }, { x: -1, y: 1 }
+      { x: 1, y: 0 },   // right
+      { x: 0, y: 1 },   // down
+      { x: 1, y: 1 },   // down-right
+      { x: -1, y: 0 },  // left
+      { x: 0, y: -1 },  // up
+      { x: -1, y: -1 }, // up-left
+      { x: 1, y: -1 },  // up-right
+      { x: -1, y: 1 }   // down-left
     ];
-
-    for (let i = 0; i < gridSize; i++) {
-      grid[i] = [];
-      for (let j = 0; j < gridSize; j++) {
-        grid[i][j] = '';
-      }
-    }
 
     function placeWords() {
-      for (let word of words) {
+      const sortedWords = [...words].sort((a, b) => b.length - a.length);
+
+      for (let word of sortedWords) {
         word = word.toUpperCase();
         let placed = false;
-        while (!placed) {
+        let attempts = 0;
+        const maxAttempts = 500;
+
+        while (!placed && attempts < maxAttempts) {
+          attempts++;
           const dir = directions[Math.floor(Math.random() * directions.length)];
           const row = Math.floor(Math.random() * gridSize);
           const col = Math.floor(Math.random() * gridSize);
@@ -200,89 +99,58 @@
             placed = true;
           }
         }
+
+        if (!placed) {
+          console.warn(`Could not place word: ${word}`);
+        }
       }
     }
 
-    function fillGrid() {
+    function fillEmptySpaces() {
       const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      for (let i = 0; i < gridSize; i++) {
-        for (let j = 0; j < gridSize; j++) {
-          if (grid[i][j] === '') {
-            grid[i][j] = letters[Math.floor(Math.random() * letters.length)];
+      for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+          if (grid[row][col] === '') {
+            grid[row][col] = letters[Math.floor(Math.random() * letters.length)];
           }
         }
       }
     }
 
-    function renderGrid() {
-      const gridContainer = document.getElementById('grid');
-      gridContainer.innerHTML = '';
-      for (let i = 0; i < gridSize; i++) {
-        for (let j = 0; j < gridSize; j++) {
-          const cell = document.createElement('div');
-          cell.classList.add('cell');
-          cell.dataset.row = i;
-          cell.dataset.col = j;
-          cell.textContent = grid[i][j];
-          gridContainer.appendChild(cell);
+    function drawGrid() {
+      const table = document.getElementById("puzzle");
+      table.innerHTML = "";
+      for (let row = 0; row < gridSize; row++) {
+        const tr = document.createElement("tr");
+        for (let col = 0; col < gridSize; col++) {
+          const td = document.createElement("td");
+          td.textContent = grid[row][col];
+          tr.appendChild(td);
         }
+        table.appendChild(tr);
       }
     }
 
-    let isMouseDown = false;
-    let selectedCells = [];
-
-    function getCell(row, col) {
-      return document.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
+    function showWordList() {
+      const list = document.getElementById("word-list");
+      for (let word of words) {
+        const li = document.createElement("li");
+        li.textContent = word.toUpperCase();
+        list.appendChild(li);
+      }
     }
 
-    function clearSelection() {
-      selectedCells.forEach(cell => cell.classList.remove('selected'));
-      selectedCells = [];
+    function generatePuzzle() {
+      placeWords();
+      fillEmptySpaces();
+      drawGrid();
+      showWordList();
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("puzzle-container").style.display = "block";
     }
 
-    function checkWord() {
-      const selectedWord = selectedCells.map(cell => cell.textContent).join('').toLowerCase();
-      const reversedWord = selectedCells.map(cell => cell.textContent).reverse().join('').toLowerCase();
-      const wordListItems = document.querySelectorAll('#wordList li');
-
-      for (let item of wordListItems) {
-        const word = item.textContent.replace(/\s+/g, '').toLowerCase();
-        if (selectedWord === word || reversedWord === word) {
-          selectedCells.forEach(cell => cell.classList.add('found'));
-          item.classList.add('found');
-          break;
-        }
-      }
-      clearSelection();
-    }
-
-    document.addEventListener('mousedown', (e) => {
-      if (e.target.classList.contains('cell')) {
-        isMouseDown = true;
-        clearSelection();
-        e.target.classList.add('selected');
-        selectedCells.push(e.target);
-      }
-    });
-
-    document.addEventListener('mouseover', (e) => {
-      if (isMouseDown && e.target.classList.contains('cell') && !selectedCells.includes(e.target)) {
-        e.target.classList.add('selected');
-        selectedCells.push(e.target);
-      }
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (selectedCells.length > 0) {
-        checkWord();
-      }
-      isMouseDown = false;
-    });
-
-    placeWords();
-    fillGrid();
-    renderGrid();
+    // Slight delay to let page render loading text before JS starts
+    setTimeout(generatePuzzle, 50);
   </script>
 </body>
 </html>
