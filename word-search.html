@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Word Search – Modern Slavery & Ecocide</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e9f7e6;
+      color: #2d6a4f;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #2d6a4f;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .word-list {
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+
+    .word-list ul {
+      list-style: none;
+      padding-left: 0;
+      columns: 2;
+    }
+
+    .word-list li {
+      margin: 5px 0;
+      cursor: pointer;
+    }
+
+    .word-list li.found {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    .word-search-grid {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(15, 30px);
+      grid-gap: 5px;
+      justify-content: center;
+    }
+
+    .cell {
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      font-size: 1em;
+      text-transform: uppercase;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      line-height: 30px;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .cell.selected {
+      background-color: #a3d9a5;
+    }
+
+    .cell.found {
+      background-color: #38b000;
+      color: white;
+    }
+
+    .instructions {
+      margin-top: 20px;
+      font-size: 1em;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      text-decoration: none;
+      color: #2d6a4f;
+      font-weight: bold;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Word Search: Blood and Earth</h1>
+  </header>
+
+  <div class="container">
+    <p class="instructions">
+      Find the words hidden in the grid below. Click and drag to select letters. Words may appear horizontally, vertically, or diagonally.
+    </p>
+
+    <div class="word-list">
+      <h3>Word List</h3>
+      <ul id="wordList">
+        <li>Ecocide</li>
+        <li>Slavery</li>
+        <li>Extraction</li>
+        <li>Export</li>
+        <li>Manufacture</li>
+        <li>Retail</li>
+        <li>Consumer</li>
+        <li>Kevin Bales</li>
+        <li>Environment</li>
+        <li>Deforestation</li>
+        <li>Pollution</li>
+        <li>Trafficking</li>
+        <li>Bondage</li>
+        <li>Corruption</li>
+        <li>Supply Chain</li>
+        <li>Forced Labor</li>
+        <li>Mining</li>
+        <li>Logging</li>
+        <li>Debt</li>
+        <li>Freedom</li>
+      </ul>
+    </div>
+
+    <div class="word-search-grid" id="grid">
+      <!-- Grid will be generated here -->
+    </div>
+
+    <a href="index.html" class="back-link">← Back to Home</a>
+  </div>
+
+  <script>
+    const words = [
+      "ecocide", "slavery", "extraction", "export", "manufacture", "retail",
+      "consumer", "kevinbales", "environment", "deforestation", "pollution",
+      "trafficking", "bondage", "corruption", "supplychain", "forcedlabor",
+      "mining", "logging", "debt", "freedom"
+    ];
+
+    const gridSize = 15;
+    const grid = [];
+    const directions = [
+      { x: 1, y: 0 },   // right
+      { x: 0, y: 1 },   // down
+      { x: 1, y: 1 },   // down-right
+      { x: -1, y: 0 },  // left
+      { x: 0, y: -1 },  // up
+      { x: -1, y: -1 }, // up-left
+      { x: 1, y: -1 },  // up-right
+      { x: -1, y: 1 }   // down-left
+    ];
+
+    // Initialize empty grid
+    for (let i = 0; i < gridSize; i++) {
+      grid[i] = [];
+      for (let j = 0; j < gridSize; j++) {
+        grid[i][j] = '';
+      }
+    }
+
+    // Place words in the grid
+    function placeWords() {
+      for (let word of words) {
+        word = word.toUpperCase();
+        let placed = false;
+        while (!placed) {
+          const dir = directions[Math.floor(Math.random() * directions.length)];
+          const row = Math.floor(Math.random() * gridSize);
+          const col = Math.floor(Math.random() * gridSize);
+          let fits = true;
+
+          for (let i = 0; i < word.length; i++) {
+            const newRow = row + dir.y * i;
+            const newCol = col + dir.x * i;
+            if (
+              newRow < 0 || newRow >= gridSize ||
+              newCol < 0 || newCol >= gridSize ||
+              (grid[newRow][newCol] !== '' && grid[newRow][newCol] !== word[i])
+            ) {
+              fits = false;
+              break;
+            }
+          }
+
+          if (fits) {
+            for (let i = 0; i < word.length; i++) {
+              const newRow = row + dir.y * i;
+              const newCol = col + dir.x * i;
+              grid[newRow][newCol] = word[i];
+            }
+            placed = true;
+          }
+        }
+      }
+    }
+
+    // Fill empty spaces with random letters
+    function fillGrid() {
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      for (let i = 0; i < gridSize; i++) {
+        for (let j = 0; j < gridSize; j++) {
+          if (grid[i][j] === '') {
+            grid[i][j] = letters[Math.floor(Math.random() * letters.length)];
+          }
+        }
+      }
+    }
+
+    // Render the grid
+    function renderGrid() {
+      const gridContainer = document.getElementById('grid');
+      gridContainer.innerHTML = '';
+      for (let i = 0; i < gridSize; i++) {
+        for (let j = 0; j < gridSize; j++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          cell.dataset.row = i;
+          cell.dataset.col = j;
+          cell.textContent = grid[i][j];
+          gridContainer.appendChild(cell);
+        }
+      }
+    }
+
+    // Handle user selection
+    let isMouseDown = false;
+    let selectedCells = [];
+
+    function getCell(row, col) {
+      return document.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
+    }
+
+    function clearSelection() {
+      selectedCells.forEach(cell => cell.classList.remove('selected'));
+      selectedCells = [];
+    }
+
+    function checkWord() {
+      const selectedWord = selectedCells.map(cell => cell.textContent).join('').toLowerCase();
+      const reversedWord = selectedCells.map(cell => cell.textContent).reverse().join('').toLowerCase();
+      const wordListItems = document.querySelectorAll('#wordList li');
+
+      for (let item of wordListItems) {
+        const word = item.textContent.replace(/\s+/g, '').toLowerCase();
+        if (selectedWord === word || reversedWord === word) {
+          selectedCells.forEach(cell => cell.classList.add('found'));
+          item.classList.add('found');
+          break;
+        }
+      }
+      clearSelection();
+    }
+
+    document.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('cell')) {
+        isMouseDown = true;
+        clearSelection();
+        e.target.classList.add('selected');
+        selectedCells.push(e.target);
+      }
+    });
+
+    document.addEventListener('mouseover', (e) => {
+      if (isMouseDown && e.target.classList.contains('cell') && !selectedCells.includes(e.target)) {
+        e.target.classList.add('selected');
+        selectedCells.push(e.target);
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isMouseDown) {
+        isMouseDown = false;
+        checkWord();
+      }
+    });
+
+    // Initialize the puzzle
+    placeWords();
+    fillGrid();
+    renderGrid();
+  </script>
+</body>
+</html>
