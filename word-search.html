@@ -20,27 +20,27 @@
       padding: 20px;
     }
 
-    h1 {
-      margin: 0;
-    }
-
     .container {
       max-width: 800px;
       margin: 20px auto;
-      padding: 20px;
+      padding: 15px;
       background-color: white;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    .word-list {
-      margin-top: 20px;
+    .instructions {
       font-size: 1em;
+      margin-bottom: 15px;
+    }
+
+    .word-list h3 {
+      margin-bottom: 10px;
     }
 
     .word-list ul {
       list-style: none;
-      padding-left: 0;
+      padding: 0;
       columns: 2;
     }
 
@@ -57,26 +57,22 @@
     .word-search-grid {
       margin-top: 20px;
       display: grid;
-      grid-template-columns: repeat(15, minmax(20px, 5vw));
-      gap: 3px;
+      grid-template-columns: repeat(15, 24px);
+      grid-gap: 3px;
       justify-content: center;
-      touch-action: none;
     }
 
     .cell {
-      width: 100%;
-      aspect-ratio: 1 / 1;
+      width: 24px;
+      height: 24px;
       text-align: center;
-      font-size: clamp(12px, 2.2vw, 20px);
+      font-size: 0.9em;
       text-transform: uppercase;
       border: 1px solid #ccc;
       border-radius: 4px;
-      line-height: 1;
+      line-height: 24px;
       user-select: none;
       cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     .cell.selected {
@@ -88,29 +84,25 @@
       color: white;
     }
 
-    .instructions {
-      margin-top: 20px;
-      font-size: 1em;
-    }
-
     .submit-button {
-      margin-top: 10px;
-      padding: 10px 15px;
+      margin-top: 15px;
+      display: block;
       background-color: #2d6a4f;
       color: white;
       border: none;
+      padding: 10px 20px;
       border-radius: 5px;
       cursor: pointer;
       font-size: 1em;
     }
 
     .submit-button:hover {
-      background-color: #1b4d3a;
+      background-color: #3d8061;
     }
 
     .back-link {
       display: inline-block;
-      margin-top: 30px;
+      margin-top: 25px;
       text-decoration: none;
       color: #2d6a4f;
       font-weight: bold;
@@ -118,6 +110,24 @@
 
     .back-link:hover {
       text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .word-search-grid {
+        grid-template-columns: repeat(15, 18px);
+        grid-gap: 2px;
+      }
+
+      .cell {
+        width: 18px;
+        height: 18px;
+        font-size: 0.7em;
+        line-height: 18px;
+      }
+
+      .container {
+        padding: 10px;
+      }
     }
   </style>
 </head>
@@ -128,7 +138,7 @@
 
   <div class="container">
     <p class="instructions">
-      Find the words hidden in the grid below. Tap or drag to select letters. Then press “Submit Word”.
+      Tap or click letters to select them. Press "Enter" or the button below to check your word.
     </p>
 
     <div class="word-list">
@@ -155,9 +165,7 @@
     </div>
 
     <div class="word-search-grid" id="grid"></div>
-
     <button class="submit-button" onclick="checkWord()">Submit Word</button>
-
     <a href="index.html" class="back-link">← Back to Home</a>
   </div>
 
@@ -171,10 +179,17 @@
     const gridSize = 15;
     const grid = [];
     const directions = [
-      { x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: -1, y: 0 },
-      { x: 0, y: -1 }, { x: -1, y: -1 }, { x: 1, y: -1 }, { x: -1, y: 1 }
+      { x: 1, y: 0 },   // right
+      { x: 0, y: 1 },   // down
+      { x: 1, y: 1 },   // down-right
+      { x: -1, y: 0 },  // left
+      { x: 0, y: -1 },  // up
+      { x: -1, y: -1 }, // up-left
+      { x: 1, y: -1 },  // up-right
+      { x: -1, y: 1 }   // down-left
     ];
 
+    // Initialize grid
     for (let i = 0; i < gridSize; i++) {
       grid[i] = [];
       for (let j = 0; j < gridSize; j++) {
@@ -182,41 +197,41 @@
       }
     }
 
+    // Sort and place words with attempt limits
     function placeWords() {
       words.sort((a, b) => b.length - a.length);
-      const maxAttempts = 100;
-
-      for (let word of words) {
-        word = word.replace(/\s+/g, '').toUpperCase();
-        let placed = false, attempts = 0;
-
-        while (!placed && attempts < maxAttempts) {
+      for (let word of words.slice()) {
+        const cleanWord = word.replace(/\s+/g, '').toUpperCase();
+        let placed = false;
+        for (let attempt = 0; attempt < 100 && !placed; attempt++) {
           const dir = directions[Math.floor(Math.random() * directions.length)];
           const row = Math.floor(Math.random() * gridSize);
           const col = Math.floor(Math.random() * gridSize);
           let fits = true;
-
-          for (let i = 0; i < word.length; i++) {
+          for (let i = 0; i < cleanWord.length; i++) {
             const newRow = row + dir.y * i;
             const newCol = col + dir.x * i;
             if (
-              newRow < 0 || newRow >= gridSize || newCol < 0 || newCol >= gridSize ||
-              (grid[newRow][newCol] !== '' && grid[newRow][newCol] !== word[i])
+              newRow < 0 || newRow >= gridSize ||
+              newCol < 0 || newCol >= gridSize ||
+              (grid[newRow][newCol] !== '' && grid[newRow][newCol] !== cleanWord[i])
             ) {
               fits = false;
               break;
             }
           }
-
           if (fits) {
-            for (let i = 0; i < word.length; i++) {
+            for (let i = 0; i < cleanWord.length; i++) {
               const newRow = row + dir.y * i;
               const newCol = col + dir.x * i;
-              grid[newRow][newCol] = word[i];
+              grid[newRow][newCol] = cleanWord[i];
             }
             placed = true;
           }
-          attempts++;
+        }
+        if (!placed) {
+          const index = words.indexOf(word);
+          if (index !== -1) words.splice(index, 1); // remove unplaced word
         }
       }
     }
@@ -242,46 +257,22 @@
           cell.dataset.row = i;
           cell.dataset.col = j;
           cell.textContent = grid[i][j];
-          cell.addEventListener('click', () => toggleCell(cell));
+          cell.addEventListener('click', () => toggleSelect(cell));
           gridContainer.appendChild(cell);
         }
       }
     }
 
-    let isMouseDown = false;
     let selectedCells = [];
 
-    function toggleCell(cell) {
-      if (!selectedCells.includes(cell)) {
-        cell.classList.add('selected');
-        selectedCells.push(cell);
-      } else {
+    function toggleSelect(cell) {
+      if (cell.classList.contains('selected')) {
         cell.classList.remove('selected');
         selectedCells = selectedCells.filter(c => c !== cell);
+      } else {
+        cell.classList.add('selected');
+        selectedCells.push(cell);
       }
-    }
-
-    document.addEventListener('mousedown', (e) => {
-      if (e.target.classList.contains('cell')) {
-        isMouseDown = true;
-        clearSelection();
-        toggleCell(e.target);
-      }
-    });
-
-    document.addEventListener('mouseover', (e) => {
-      if (isMouseDown && e.target.classList.contains('cell') && !selectedCells.includes(e.target)) {
-        toggleCell(e.target);
-      }
-    });
-
-    document.addEventListener('mouseup', () => {
-      isMouseDown = false;
-    });
-
-    function clearSelection() {
-      selectedCells.forEach(cell => cell.classList.remove('selected'));
-      selectedCells = [];
     }
 
     function checkWord() {
@@ -300,7 +291,17 @@
       clearSelection();
     }
 
-    // Init
+    function clearSelection() {
+      selectedCells.forEach(c => c.classList.remove('selected'));
+      selectedCells = [];
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        checkWord();
+      }
+    });
+
     placeWords();
     fillGrid();
     renderGrid();
