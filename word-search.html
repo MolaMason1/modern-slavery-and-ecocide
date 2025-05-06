@@ -26,7 +26,7 @@
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1000px;
       margin: 30px auto;
       padding: 20px;
       background-color: white;
@@ -58,22 +58,23 @@
     .word-search-grid {
       margin-top: 30px;
       display: grid;
-      grid-template-columns: repeat(15, 30px);
-      grid-gap: 5px;
+      grid-template-columns: repeat(15, 1fr);
+      gap: 4px;
       justify-content: center;
+      touch-action: manipulation;
     }
 
     .cell {
-      width: 30px;
-      height: 30px;
-      text-align: center;
+      aspect-ratio: 1;
       font-size: 1em;
       text-transform: uppercase;
       border: 1px solid #ccc;
       border-radius: 4px;
-      line-height: 30px;
       user-select: none;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .cell.selected {
@@ -101,6 +102,16 @@
     .back-link:hover {
       text-decoration: underline;
     }
+
+    @media (max-width: 600px) {
+      .word-search-grid {
+        grid-template-columns: repeat(15, minmax(18px, 1fr));
+      }
+
+      .container {
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -110,7 +121,7 @@
 
   <div class="container">
     <p class="instructions">
-      Find the words hidden in the grid below. Click and drag to select letters. Words may appear horizontally, vertically, or diagonally.
+      Tap or click on letters to select them. Once you have selected a full word, press Enter (or tap the "Submit" button on mobile) to check.
     </p>
 
     <div class="word-list">
@@ -136,11 +147,11 @@
       </ul>
     </div>
 
-    <div class="word-search-grid" id="grid">
-      <!-- Grid will be generated here -->
-    </div>
+    <div class="word-search-grid" id="grid"></div>
 
-    <a href="index.html" class="back-link">← Back to Home</a>
+    <button id="submitBtn" style="margin-top: 20px; display: block;">Submit Selection</button>
+
+    <a href="index.html" class="back-link">&larr; Back to Home</a>
   </div>
 
   <script>
@@ -153,17 +164,11 @@
     const gridSize = 15;
     const grid = [];
     const directions = [
-      { x: 1, y: 0 },   // right
-      { x: 0, y: 1 },   // down
-      { x: 1, y: 1 },   // down-right
-      { x: -1, y: 0 },  // left
-      { x: 0, y: -1 },  // up
-      { x: -1, y: -1 }, // up-left
-      { x: 1, y: -1 },  // up-right
-      { x: -1, y: 1 }   // down-left
+      { x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 },
+      { x: -1, y: 0 }, { x: 0, y: -1 }, { x: -1, y: -1 },
+      { x: 1, y: -1 }, { x: -1, y: 1 }
     ];
 
-    // Initialize empty grid
     for (let i = 0; i < gridSize; i++) {
       grid[i] = [];
       for (let j = 0; j < gridSize; j++) {
@@ -171,9 +176,7 @@
       }
     }
 
-    // Place words in the grid, with longer words placed first
     function placeWords() {
-      // Sort words by length, longest first
       words.sort((a, b) => b.length - a.length);
 
       for (let word of words) {
@@ -210,7 +213,6 @@
       }
     }
 
-    // Fill empty spaces with random letters
     function fillGrid() {
       const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       for (let i = 0; i < gridSize; i++) {
@@ -222,7 +224,6 @@
       }
     }
 
-    // Render the grid
     function renderGrid() {
       const gridContainer = document.getElementById('grid');
       gridContainer.innerHTML = '';
@@ -238,12 +239,16 @@
       }
     }
 
-    // Handle user selection
-    let isMouseDown = false;
     let selectedCells = [];
 
-    function getCell(row, col) {
-      return document.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
+    function toggleCell(cell) {
+      if (cell.classList.contains('selected')) {
+        cell.classList.remove('selected');
+        selectedCells = selectedCells.filter(c => c !== cell);
+      } else {
+        cell.classList.add('selected');
+        selectedCells.push(cell);
+      }
     }
 
     function clearSelection() {
@@ -267,30 +272,20 @@
       clearSelection();
     }
 
-    document.addEventListener('mousedown', (e) => {
+    document.addEventListener('click', (e) => {
       if (e.target.classList.contains('cell')) {
-        isMouseDown = true;
-        clearSelection();
-        e.target.classList.add('selected');
-        selectedCells.push(e.target);
+        toggleCell(e.target);
       }
     });
 
-    document.addEventListener('mouseover', (e) => {
-      if (isMouseDown && e.target.classList.contains('cell') && !selectedCells.includes(e.target)) {
-        e.target.classList.add('selected');
-        selectedCells.push(e.target);
-      }
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (isMouseDown) {
-        isMouseDown = false;
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
         checkWord();
       }
     });
 
-    // Initialize the puzzle
+    document.getElementById('submitBtn').addEventListener('click', checkWord);
+
     placeWords();
     fillGrid();
     renderGrid();
