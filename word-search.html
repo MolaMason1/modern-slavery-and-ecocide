@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Word Search – Modern Slavery & Ecocide</title>
-  <link rel="stylesheet" href="styles.css" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -26,8 +25,8 @@
     }
 
     .container {
-      max-width: 1000px;
-      margin: 30px auto;
+      max-width: 800px;
+      margin: 20px auto;
       padding: 20px;
       background-color: white;
       border-radius: 8px;
@@ -36,7 +35,7 @@
 
     .word-list {
       margin-top: 20px;
-      font-size: 1.1em;
+      font-size: 1em;
     }
 
     .word-list ul {
@@ -56,25 +55,28 @@
     }
 
     .word-search-grid {
-      margin-top: 30px;
+      margin-top: 20px;
       display: grid;
-      grid-template-columns: repeat(15, 1fr);
-      gap: 4px;
+      grid-template-columns: repeat(15, minmax(20px, 5vw));
+      gap: 3px;
       justify-content: center;
-      touch-action: manipulation;
+      touch-action: none;
     }
 
     .cell {
-      aspect-ratio: 1;
-      font-size: 1em;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      text-align: center;
+      font-size: clamp(12px, 2.2vw, 20px);
       text-transform: uppercase;
       border: 1px solid #ccc;
       border-radius: 4px;
+      line-height: 1;
       user-select: none;
       cursor: pointer;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
     }
 
     .cell.selected {
@@ -91,6 +93,21 @@
       font-size: 1em;
     }
 
+    .submit-button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      background-color: #2d6a4f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    .submit-button:hover {
+      background-color: #1b4d3a;
+    }
+
     .back-link {
       display: inline-block;
       margin-top: 30px;
@@ -102,16 +119,6 @@
     .back-link:hover {
       text-decoration: underline;
     }
-
-    @media (max-width: 600px) {
-      .word-search-grid {
-        grid-template-columns: repeat(15, minmax(18px, 1fr));
-      }
-
-      .container {
-        padding: 10px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -121,7 +128,7 @@
 
   <div class="container">
     <p class="instructions">
-      Tap or click on letters to select them. Once you have selected a full word, press Enter (or tap the "Submit" button on mobile) to check.
+      Find the words hidden in the grid below. Tap or drag to select letters. Then press “Submit Word”.
     </p>
 
     <div class="word-list">
@@ -149,9 +156,9 @@
 
     <div class="word-search-grid" id="grid"></div>
 
-    <button id="submitBtn" style="margin-top: 20px; display: block;">Submit Selection</button>
+    <button class="submit-button" onclick="checkWord()">Submit Word</button>
 
-    <a href="index.html" class="back-link">&larr; Back to Home</a>
+    <a href="index.html" class="back-link">← Back to Home</a>
   </div>
 
   <script>
@@ -164,9 +171,8 @@
     const gridSize = 15;
     const grid = [];
     const directions = [
-      { x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 },
-      { x: -1, y: 0 }, { x: 0, y: -1 }, { x: -1, y: -1 },
-      { x: 1, y: -1 }, { x: -1, y: 1 }
+      { x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: -1, y: 0 },
+      { x: 0, y: -1 }, { x: -1, y: -1 }, { x: 1, y: -1 }, { x: -1, y: 1 }
     ];
 
     for (let i = 0; i < gridSize; i++) {
@@ -178,11 +184,13 @@
 
     function placeWords() {
       words.sort((a, b) => b.length - a.length);
+      const maxAttempts = 100;
 
       for (let word of words) {
-        word = word.toUpperCase();
-        let placed = false;
-        while (!placed) {
+        word = word.replace(/\s+/g, '').toUpperCase();
+        let placed = false, attempts = 0;
+
+        while (!placed && attempts < maxAttempts) {
           const dir = directions[Math.floor(Math.random() * directions.length)];
           const row = Math.floor(Math.random() * gridSize);
           const col = Math.floor(Math.random() * gridSize);
@@ -192,8 +200,7 @@
             const newRow = row + dir.y * i;
             const newCol = col + dir.x * i;
             if (
-              newRow < 0 || newRow >= gridSize ||
-              newCol < 0 || newCol >= gridSize ||
+              newRow < 0 || newRow >= gridSize || newCol < 0 || newCol >= gridSize ||
               (grid[newRow][newCol] !== '' && grid[newRow][newCol] !== word[i])
             ) {
               fits = false;
@@ -209,6 +216,7 @@
             }
             placed = true;
           }
+          attempts++;
         }
       }
     }
@@ -234,22 +242,42 @@
           cell.dataset.row = i;
           cell.dataset.col = j;
           cell.textContent = grid[i][j];
+          cell.addEventListener('click', () => toggleCell(cell));
           gridContainer.appendChild(cell);
         }
       }
     }
 
+    let isMouseDown = false;
     let selectedCells = [];
 
     function toggleCell(cell) {
-      if (cell.classList.contains('selected')) {
-        cell.classList.remove('selected');
-        selectedCells = selectedCells.filter(c => c !== cell);
-      } else {
+      if (!selectedCells.includes(cell)) {
         cell.classList.add('selected');
         selectedCells.push(cell);
+      } else {
+        cell.classList.remove('selected');
+        selectedCells = selectedCells.filter(c => c !== cell);
       }
     }
+
+    document.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('cell')) {
+        isMouseDown = true;
+        clearSelection();
+        toggleCell(e.target);
+      }
+    });
+
+    document.addEventListener('mouseover', (e) => {
+      if (isMouseDown && e.target.classList.contains('cell') && !selectedCells.includes(e.target)) {
+        toggleCell(e.target);
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isMouseDown = false;
+    });
 
     function clearSelection() {
       selectedCells.forEach(cell => cell.classList.remove('selected'));
@@ -257,14 +285,14 @@
     }
 
     function checkWord() {
-      const selectedWord = selectedCells.map(cell => cell.textContent).join('').toLowerCase();
-      const reversedWord = selectedCells.map(cell => cell.textContent).reverse().join('').toLowerCase();
+      const selectedWord = selectedCells.map(c => c.textContent).join('').toLowerCase();
+      const reversedWord = selectedCells.map(c => c.textContent).reverse().join('').toLowerCase();
       const wordListItems = document.querySelectorAll('#wordList li');
 
       for (let item of wordListItems) {
         const word = item.textContent.replace(/\s+/g, '').toLowerCase();
         if (selectedWord === word || reversedWord === word) {
-          selectedCells.forEach(cell => cell.classList.add('found'));
+          selectedCells.forEach(c => c.classList.add('found'));
           item.classList.add('found');
           break;
         }
@@ -272,20 +300,7 @@
       clearSelection();
     }
 
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('cell')) {
-        toggleCell(e.target);
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        checkWord();
-      }
-    });
-
-    document.getElementById('submitBtn').addEventListener('click', checkWord);
-
+    // Init
     placeWords();
     fillGrid();
     renderGrid();
