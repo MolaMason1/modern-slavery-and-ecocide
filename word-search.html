@@ -20,6 +20,30 @@
       padding: 20px;
     }
 
+
+    .back-button-container {
+      text-align: left;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .back-button {
+      padding: 10px 20px;
+      background-color: #607844;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #4a5f33;
+    }
+
+
     .container {
       max-width: 800px;
       margin: 20px auto;
@@ -135,6 +159,10 @@
   <header>
     <h1>Word Search</h1>
   </header>
+
+<div class="back-button-container">
+    <button onclick="history.back()" class="back-button">← Back</button>
+  </div>
 
   <div class="container">
     <p class="instructions">
